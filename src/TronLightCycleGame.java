@@ -6,7 +6,7 @@ public class TronLightCycleGame extends JFrame implements ActionListener{
     GamePanel game;
 
     public TronLightCycleGame() {
-        super("Move the Box");
+        super("Tron Lightcycles");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //setSize(800,650);
 
@@ -15,7 +15,7 @@ public class TronLightCycleGame extends JFrame implements ActionListener{
         game = new GamePanel(this);
         add(game);
         pack();
-        //setResizable(false);
+        setResizable(false);
         setVisible(true);
     }
 

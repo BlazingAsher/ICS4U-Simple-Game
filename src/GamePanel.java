@@ -1,5 +1,3 @@
-import javafx.scene.effect.Light;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -14,7 +12,8 @@ public class GamePanel extends JPanel implements KeyListener {
     private Image back;
     private TronLightCycleGame mainFrame;
     private LightCycle[] players;
-    private PlayArea playArea;
+    private Collidable playArea;
+    private ArtificialPlayer ai;
 
     public final static int DISPLAY_HEIGHT = 600;
     public final static int DISPLAY_WIDTH = 700;
@@ -24,7 +23,8 @@ public class GamePanel extends JPanel implements KeyListener {
         keys = new boolean[KeyEvent.KEY_LAST+1];
         //back = new ImageIcon("OuterSpace.jpg").getImage();
 
-        playArea = new PlayArea(10,10,10,10, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        playArea = new Collidable();
+        playArea.addPart(new Rectangle(10, 10, DISPLAY_WIDTH-(10*2), DISPLAY_HEIGHT-(10*2)));
 
         int numPlayers = 2;
         players = new LightCycle[numPlayers];
@@ -44,6 +44,8 @@ public class GamePanel extends JPanel implements KeyListener {
         catch (IOException e){
             System.out.println(e);
         }
+
+        ai = new ArtificialPlayer(players[1], players[0], playArea);
 
         mainFrame = m;
 
@@ -79,7 +81,7 @@ public class GamePanel extends JPanel implements KeyListener {
             players[0].setDir(Direction.SOUTH);
         }
 
-
+        ai.performAction();
 
         Point mouse = MouseInfo.getPointerInfo().getLocation();
         Point offset = getLocationOnScreen();
@@ -91,11 +93,11 @@ public class GamePanel extends JPanel implements KeyListener {
             //System.out.println("Hello");
             for(int i=0;i<players.length;i++){
                 players[i].addPart();
-                if(!players[i].checkCollide(playArea, players[i].getHead())){
+                if(!Collidable.checkCollide(playArea, players[i].getHead())){
                     System.out.println("OOB");
                 }
                 for(int j=0;j<players.length;j++){
-                    if(players[i].checkCollide(players[j], players[i].getHead())){
+                    if(Collidable.checkCollide(players[j], players[i].getHead())){
                         System.out.println(i + " u ded collide with "+j);
                     }
                 }
@@ -153,36 +155,36 @@ public class GamePanel extends JPanel implements KeyListener {
             int extrapx;
             switch(player.getDir()){
                 case NORTH:
-                    extrapx = icoH - player.WIDTH;
+                    extrapx = icoH - GameSettings.PLAYER_WIDTH;
                     extrapx /= 2;
                     drawX -= extrapx;
 
-                    drawY += icoW - player.HEIGHT -1;
+                    drawY += icoW - GameSettings.PLAYER_HEIGHT -1;
                     break;
                 case EAST:
-                    extrapx = icoH - player.HEIGHT;
+                    extrapx = icoH - GameSettings.PLAYER_HEIGHT;
                     //System.out.println(extrapx);
                     extrapx /= 2;
                     //System.out.println(extrapx);
                     drawY -= extrapx;
 
-                    drawX -= icoW - player.WIDTH -1;
+                    drawX -= icoW - GameSettings.PLAYER_WIDTH -1;
                     break;
                 case SOUTH:
-                    extrapx = icoH - player.WIDTH;
+                    extrapx = icoH - GameSettings.PLAYER_WIDTH;
                     extrapx /= 2;
-                    drawX += extrapx + player.WIDTH;
+                    drawX += extrapx + GameSettings.PLAYER_WIDTH;
 
-                    drawY -= icoW - player.HEIGHT -1;
+                    drawY -= icoW - GameSettings.PLAYER_HEIGHT -1;
                     break;
                 case WEST:
-                    extrapx = icoH - player.HEIGHT;
+                    extrapx = icoH - GameSettings.PLAYER_HEIGHT;
                     //System.out.println(extrapx);
                     extrapx /= 2;
                     //System.out.println(extrapx);
-                    drawY += extrapx + player.HEIGHT;
+                    drawY += extrapx + GameSettings.PLAYER_HEIGHT;
 
-                    drawX += icoW - player.WIDTH -1;
+                    drawX += icoW - GameSettings.PLAYER_WIDTH -1;
 
             }
 

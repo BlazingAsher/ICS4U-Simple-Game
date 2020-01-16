@@ -2,10 +2,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Collideable {
+public class Collidable {
     ArrayList<Rectangle> bodyParts = new ArrayList<Rectangle>();
 
-    public boolean checkCollide(Collideable opp, Rectangle checkRect){
+    public static boolean checkCollide(Collidable opp, Rectangle checkRect){
         Rectangle head = checkRect;
 
         Iterator it = opp.bodyParts.iterator();
@@ -17,5 +17,9 @@ public class Collideable {
             }
         }
         return false;
+    }
+
+    public void addPart(Rectangle part){
+        this.bodyParts.add(part);
     }
 }

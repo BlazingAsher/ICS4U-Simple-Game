@@ -1,13 +1,9 @@
-import javafx.scene.effect.Light;
-
 import java.awt.*;
 import java.awt.image.*;
-import java.util.Iterator;
-import java.util.ArrayList;
 
-public class LightCycle extends Collideable{
-    public final int WIDTH = 8;
-    public final int HEIGHT = 8;
+public class LightCycle extends Collidable{
+    //public final int WIDTH = 8;
+    //public final int HEIGHT = 8;
 
     private int headX;
     private int headY;
@@ -26,7 +22,7 @@ public class LightCycle extends Collideable{
         this.dir = dir;
         this.color = color;
         this.icon = icon;
-        this.head = new Rectangle(headX, headY, WIDTH, HEIGHT);
+        this.head = new Rectangle(headX, headY, GameSettings.PLAYER_WIDTH, GameSettings.PLAYER_HEIGHT);
     }
 
     public Color getColor() {
@@ -53,10 +49,10 @@ public class LightCycle extends Collideable{
     }
 
     public void addPart(){
-        this.head = new Rectangle(headX, headY, this.WIDTH,this.HEIGHT);
+        this.head = new Rectangle(headX, headY, GameSettings.PLAYER_WIDTH,GameSettings.PLAYER_HEIGHT);
         bodyParts.add(this.head);
-        headX+=this.WIDTH*dir.getIncX();
-        headY+=this.HEIGHT*dir.getIncY();
+        headX+=GameSettings.PLAYER_WIDTH*dir.getIncX();
+        headY+=GameSettings.PLAYER_HEIGHT*dir.getIncY();
     }
 
 //    public boolean checkCollide(LightCycle opp){
