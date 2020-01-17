@@ -12,6 +12,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private Image back;
     private TronLightCycleGame mainFrame;
     private LightCycle[] players;
+    private int[] losses;
     private Collidable playArea;
     private ArtificialPlayer ai;
 
@@ -20,8 +21,8 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private Timer myTimer;
     private Timer scoreTimer;
-    private int currScore;
-    private int topScore;
+   /* private int currScore;
+    private int topScore;*/
 
     private JLabel currScoreLabel = new JLabel("Score: 0");
     private JLabel topScoreLabel = new JLabel("Top Score: 0");
@@ -34,7 +35,8 @@ public class GamePanel extends JPanel implements KeyListener {
         myTimer = new Timer(50, new TickLoop());
         scoreTimer = new Timer(100, new ScoreTickLoop());
 
-        topScore = 0;
+        //topScore = 0;
+        losses = new int[GameSettings.getNumPlayers()];
 
         mainFrame = m;
         addKeyListener(this);
@@ -45,8 +47,7 @@ public class GamePanel extends JPanel implements KeyListener {
         playArea = new Collidable();
         playArea.addPart(new Rectangle(10, 150, DISPLAY_WIDTH-(10+10), DISPLAY_HEIGHT-(10+150)));
 
-        int numPlayers = 2;
-        players = new LightCycle[numPlayers];
+        players = new LightCycle[GameSettings.getNumPlayers()];
 
         Direction[] directions = new Direction[]{Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH};
 
@@ -56,7 +57,7 @@ public class GamePanel extends JPanel implements KeyListener {
             playerIcons = new BufferedImage[]{ImageIO.read(new File("cycles/cycle_blue.png")), ImageIO.read(new File("cycles/cycle_red.png")), ImageIO.read(new File("cycles/cycle_blue.png")), ImageIO.read(new File("cycles/cycle_blue.png"))};
 
             //players[0] = new LightCycle(300,400, Direction.WEST, playerColors[0], playerIcons[0]);
-            for(int i=0;i<numPlayers;i++){
+            for(int i=0;i<GameSettings.getNumPlayers();i++){
                 players[i] = new LightCycle((int)(100+Math.random()*300), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)], playerColors[i], playerIcons[i]);
             }
         }
@@ -66,22 +67,23 @@ public class GamePanel extends JPanel implements KeyListener {
 
         ai = new ArtificialPlayer(players[1], players[0], playArea);
 
-        currScore = 0;
+        //currScore = 0;
 
         currScoreLabel.setLocation(10,100);
-        currScoreLabel.setSize(100,15);
+        currScoreLabel.setSize(200,15);
+        currScoreLabel.setText("Wins Player 0: " + losses[1]);
         add(currScoreLabel);
 
         topScoreLabel.setLocation(10,120);
-        topScoreLabel.setSize(100,15);
-        topScoreLabel.setText("Top Score: " + topScore);
+        topScoreLabel.setSize(200,15);
+        topScoreLabel.setText("Wins Player 1: " + losses[0]);
         add(topScoreLabel);
 
     }
 
     public void reset() {
         removeAll();
-        topScore = Math.max(currScore, topScore);
+        //topScore = Math.max(currScore, topScore);
         init();
     }
 
@@ -126,13 +128,17 @@ public class GamePanel extends JPanel implements KeyListener {
             for(int i=0;i<players.length;i++){
                 players[i].addPart();
                 if(!Collidable.checkCollide(playArea, players[i].getHead())){
+                    losses[i]+=1;
                     System.out.println("OOB");
                     reset();
+                    break;
                 }
                 for(int j=0;j<players.length;j++){
                     if(Collidable.checkCollide(players[j], players[i].getHead())){
+                        losses[i]+=1;
                         System.out.println(i + " u ded collide with "+j);
                         reset();
+                        break;
                     }
                 }
             }
@@ -143,8 +149,8 @@ public class GamePanel extends JPanel implements KeyListener {
     class ScoreTickLoop implements ActionListener {
         public void actionPerformed(ActionEvent evt){
             //System.out.println("Hello");
-            currScore += 10;
-            currScoreLabel.setText("Score: " + currScore);
+            //currScore += 10;
+            //currScoreLabel.setText("Score: " + currScore);
         }
     }
 

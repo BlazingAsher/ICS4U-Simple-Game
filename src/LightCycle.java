@@ -22,7 +22,7 @@ public class LightCycle extends Collidable{
         this.dir = dir;
         this.color = color;
         this.icon = icon;
-        this.head = new Rectangle(headX, headY, GameSettings.PLAYER_WIDTH, GameSettings.PLAYER_HEIGHT);
+        this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(), GameSettings.getPlayerHeight());
     }
 
     public Color getColor() {
@@ -49,10 +49,10 @@ public class LightCycle extends Collidable{
     }
 
     public void addPart(){
-        this.head = new Rectangle(headX, headY, GameSettings.PLAYER_WIDTH,GameSettings.PLAYER_HEIGHT);
+        this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(),GameSettings.getPlayerHeight());
         bodyParts.add(this.head);
-        headX+=GameSettings.PLAYER_WIDTH*dir.getIncX();
-        headY+=GameSettings.PLAYER_HEIGHT*dir.getIncY();
+        headX+=GameSettings.getPlayerWidth()*dir.getIncX();
+        headY+=GameSettings.getPlayerHeight()*dir.getIncY();
     }
 
     public int getIconXOffset(){
@@ -63,16 +63,16 @@ public class LightCycle extends Collidable{
         int extrapx;
         switch(this.getDir()){
             case NORTH:
-                extrapx = (icoH - GameSettings.PLAYER_WIDTH)/-2;
+                extrapx = (icoH - GameSettings.getPlayerWidth())/-2;
                 break;
             case EAST:
-                extrapx = -(icoW - GameSettings.PLAYER_WIDTH -1);
+                extrapx = -(icoW - GameSettings.getPlayerWidth() -1);
                 break;
             case SOUTH:
-                extrapx = (icoH - GameSettings.PLAYER_WIDTH)/2+ GameSettings.PLAYER_WIDTH;
+                extrapx = (icoH - GameSettings.getPlayerWidth())/2+ GameSettings.getPlayerWidth();
                 break;
             default:
-                extrapx =  icoW - GameSettings.PLAYER_WIDTH -1;
+                extrapx =  icoW - GameSettings.getPlayerWidth() -1;
         }
         return extrapx;
     }
@@ -85,16 +85,16 @@ public class LightCycle extends Collidable{
         int extrapx;
         switch(this.getDir()){
             case NORTH:
-                extrapx = icoW - GameSettings.PLAYER_HEIGHT -1;
+                extrapx = icoW - GameSettings.getPlayerHeight() -1;
                 break;
             case EAST:
-                extrapx = (icoH - GameSettings.PLAYER_HEIGHT)/-2;
+                extrapx = (icoH - GameSettings.getPlayerHeight())/-2;
                 break;
             case SOUTH:
-                extrapx = -(icoW - GameSettings.PLAYER_HEIGHT -1);
+                extrapx = -(icoW - GameSettings.getPlayerHeight() -1);
                 break;
             default:
-                extrapx = (icoH - GameSettings.PLAYER_HEIGHT)/2 + GameSettings.PLAYER_HEIGHT;
+                extrapx = (icoH - GameSettings.getPlayerHeight())/2 + GameSettings.getPlayerHeight();
         }
         return extrapx;
     }
