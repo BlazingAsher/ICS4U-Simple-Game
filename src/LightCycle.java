@@ -55,6 +55,50 @@ public class LightCycle extends Collidable{
         headY+=GameSettings.PLAYER_HEIGHT*dir.getIncY();
     }
 
+    public int getIconXOffset(){
+        int icoW, icoH;
+        icoW = this.getIcon().getWidth();
+        icoH = this.getIcon().getHeight();
+
+        int extrapx;
+        switch(this.getDir()){
+            case NORTH:
+                extrapx = (icoH - GameSettings.PLAYER_WIDTH)/-2;
+                break;
+            case EAST:
+                extrapx = -(icoW - GameSettings.PLAYER_WIDTH -1);
+                break;
+            case SOUTH:
+                extrapx = (icoH - GameSettings.PLAYER_WIDTH)/2+ GameSettings.PLAYER_WIDTH;
+                break;
+            default:
+                extrapx =  icoW - GameSettings.PLAYER_WIDTH -1;
+        }
+        return extrapx;
+    }
+
+    public int getIconYOffset(){
+        int icoW, icoH;
+        icoW = this.getIcon().getWidth();
+        icoH = this.getIcon().getHeight();
+
+        int extrapx;
+        switch(this.getDir()){
+            case NORTH:
+                extrapx = icoW - GameSettings.PLAYER_HEIGHT -1;
+                break;
+            case EAST:
+                extrapx = (icoH - GameSettings.PLAYER_HEIGHT)/-2;
+                break;
+            case SOUTH:
+                extrapx = -(icoW - GameSettings.PLAYER_HEIGHT -1);
+                break;
+            default:
+                extrapx = (icoH - GameSettings.PLAYER_HEIGHT)/2 + GameSettings.PLAYER_HEIGHT;
+        }
+        return extrapx;
+    }
+
 //    public boolean checkCollide(LightCycle opp){
 //        Rectangle head = this.head;
 //

@@ -17,14 +17,33 @@ public class GamePanel extends JPanel implements KeyListener {
 
     public final static int DISPLAY_HEIGHT = 600;
     public final static int DISPLAY_WIDTH = 700;
-    Timer myTimer;
+
+    private Timer myTimer;
+    private Timer scoreTimer;
+    private int currScore;
+    private int topScore;
+
+    private JLabel currScoreLabel = new JLabel("Score: 0");
+    private JLabel topScoreLabel = new JLabel("Top Score: 0");
 
     public GamePanel(TronLightCycleGame m){
         keys = new boolean[KeyEvent.KEY_LAST+1];
         //back = new ImageIcon("OuterSpace.jpg").getImage();
+        setPreferredSize( new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 
+        myTimer = new Timer(50, new TickLoop());
+        scoreTimer = new Timer(100, new ScoreTickLoop());
+
+        topScore = 0;
+
+        mainFrame = m;
+        addKeyListener(this);
+        init();
+    }
+
+    private void init() {
         playArea = new Collidable();
-        playArea.addPart(new Rectangle(10, 10, DISPLAY_WIDTH-(10*2), DISPLAY_HEIGHT-(10*2)));
+        playArea.addPart(new Rectangle(10, 150, DISPLAY_WIDTH-(10+10), DISPLAY_HEIGHT-(10+150)));
 
         int numPlayers = 2;
         players = new LightCycle[numPlayers];
@@ -38,7 +57,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
             //players[0] = new LightCycle(300,400, Direction.WEST, playerColors[0], playerIcons[0]);
             for(int i=0;i<numPlayers;i++){
-                players[i] = new LightCycle((int)(100+Math.random()*300), (int)(100+Math.random()*400), directions[(int) (Math.random()*4)], playerColors[i], playerIcons[i]);
+                players[i] = new LightCycle((int)(100+Math.random()*300), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)], playerColors[i], playerIcons[i]);
             }
         }
         catch (IOException e){
@@ -47,15 +66,28 @@ public class GamePanel extends JPanel implements KeyListener {
 
         ai = new ArtificialPlayer(players[1], players[0], playArea);
 
-        mainFrame = m;
+        currScore = 0;
 
-        setPreferredSize( new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
-        myTimer = new Timer(50, new TickLoop());
-        addKeyListener(this);
+        currScoreLabel.setLocation(10,100);
+        currScoreLabel.setSize(100,15);
+        add(currScoreLabel);
+
+        topScoreLabel.setLocation(10,120);
+        topScoreLabel.setSize(100,15);
+        topScoreLabel.setText("Top Score: " + topScore);
+        add(topScoreLabel);
+
+    }
+
+    public void reset() {
+        removeAll();
+        topScore = Math.max(currScore, topScore);
+        init();
     }
 
     public void start(){
         myTimer.start();
+        scoreTimer.start();
     }
 
     public void addNotify() {
@@ -95,14 +127,24 @@ public class GamePanel extends JPanel implements KeyListener {
                 players[i].addPart();
                 if(!Collidable.checkCollide(playArea, players[i].getHead())){
                     System.out.println("OOB");
+                    reset();
                 }
                 for(int j=0;j<players.length;j++){
                     if(Collidable.checkCollide(players[j], players[i].getHead())){
                         System.out.println(i + " u ded collide with "+j);
+                        reset();
                     }
                 }
             }
 
+        }
+    }
+
+    class ScoreTickLoop implements ActionListener {
+        public void actionPerformed(ActionEvent evt){
+            //System.out.println("Hello");
+            currScore += 10;
+            currScoreLabel.setText("Score: " + currScore);
         }
     }
 
@@ -134,59 +176,15 @@ public class GamePanel extends JPanel implements KeyListener {
             }
 
             AffineTransform rot = new AffineTransform();
-            //rot.scale(0.2, 0.2);
-            //System.out.println(player.getDir());
-            rot.rotate(Math.toRadians(player.getDir().getDeg()),0,0); 		// 75,84 is the center of my Image, this is the point of rotation.
-            //rot.rotate(90,player.getIcon().getWidth(null)/2,player.getIcon().getHeight(null)/2); 		// 75,84 is the center of my Image, this is the point of rotation.
+            rot.rotate(Math.toRadians(player.getDir().getDeg()),0,0);
 
             AffineTransformOp rotOp = new AffineTransformOp(rot, AffineTransformOp.TYPE_BILINEAR); 	// The options are: TYPE_BICUBIC, TYPE_BILINEAR, TYPE_NEAREST_NEIGHBOR
             Graphics2D g2D = (Graphics2D)g;
 
             int drawX, drawY;
-            drawX = player.getHead().x;
-            drawY = player.getHead().y;
+            drawX = player.getHead().x + player.getIconXOffset();
+            drawY = player.getHead().y + player.getIconYOffset();
             //g2D.drawImage(player.getIcon(),rotOp,drawX,drawY);
-
-            int icoW, icoH;
-            icoW = player.getIcon().getWidth();
-            icoH = player.getIcon().getHeight();
-            //System.out.println(icoW + " " + icoH);
-
-            int extrapx;
-            switch(player.getDir()){
-                case NORTH:
-                    extrapx = icoH - GameSettings.PLAYER_WIDTH;
-                    extrapx /= 2;
-                    drawX -= extrapx;
-
-                    drawY += icoW - GameSettings.PLAYER_HEIGHT -1;
-                    break;
-                case EAST:
-                    extrapx = icoH - GameSettings.PLAYER_HEIGHT;
-                    //System.out.println(extrapx);
-                    extrapx /= 2;
-                    //System.out.println(extrapx);
-                    drawY -= extrapx;
-
-                    drawX -= icoW - GameSettings.PLAYER_WIDTH -1;
-                    break;
-                case SOUTH:
-                    extrapx = icoH - GameSettings.PLAYER_WIDTH;
-                    extrapx /= 2;
-                    drawX += extrapx + GameSettings.PLAYER_WIDTH;
-
-                    drawY -= icoW - GameSettings.PLAYER_HEIGHT -1;
-                    break;
-                case WEST:
-                    extrapx = icoH - GameSettings.PLAYER_HEIGHT;
-                    //System.out.println(extrapx);
-                    extrapx /= 2;
-                    //System.out.println(extrapx);
-                    drawY += extrapx + GameSettings.PLAYER_HEIGHT;
-
-                    drawX += icoW - GameSettings.PLAYER_WIDTH -1;
-
-            }
 
             g2D.drawImage(player.getIcon(),rotOp,drawX,drawY);
             //g.drawImage(player.getIcon(), player.getHead().x, player.getHead().y, null);

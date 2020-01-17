@@ -13,6 +13,7 @@ public class TronLightCycleGame extends JFrame implements ActionListener{
         myTimer = new Timer(10, this);	 // trigger every 10 ms
 
         game = new GamePanel(this);
+        game.setLayout(null);
         add(game);
         pack();
         setResizable(false);
