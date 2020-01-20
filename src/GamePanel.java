@@ -12,7 +12,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private Image back;
     private TronLightCycleGame mainFrame;
     private LightCycle[] players;
-    private int[] losses;
+    private int[] wins;
     private Collidable playArea;
     private ArtificialPlayer ai;
 
@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements KeyListener {
         scoreTimer = new Timer(100, new ScoreTickLoop());
 
         //topScore = 0;
-        losses = new int[GameSettings.getNumPlayers()];
+        wins = new int[GameSettings.getNumPlayers()];
 
         mainFrame = m;
         addKeyListener(this);
@@ -71,12 +71,12 @@ public class GamePanel extends JPanel implements KeyListener {
 
         currScoreLabel.setLocation(10,100);
         currScoreLabel.setSize(200,15);
-        currScoreLabel.setText("Wins Player 0: " + losses[1]);
+        currScoreLabel.setText("Wins Player 0: " + wins[0]);
         add(currScoreLabel);
 
         topScoreLabel.setLocation(10,120);
         topScoreLabel.setSize(200,15);
-        topScoreLabel.setText("Wins Player 1: " + losses[0]);
+        topScoreLabel.setText("Wins Player 1: " + wins[1]);
         add(topScoreLabel);
 
     }
@@ -127,15 +127,18 @@ public class GamePanel extends JPanel implements KeyListener {
             //System.out.println("Hello");
             for(int i=0;i<players.length;i++){
                 players[i].addPart();
-                if(!Collidable.checkCollide(playArea, players[i].getHead())){
-                    losses[i]+=1;
+                if(!Collidable.checkCollide(playArea, players[i].getHead())[0]){
+                    wins[i^1]+=1;
                     System.out.println("OOB");
                     reset();
                     break;
                 }
                 for(int j=0;j<players.length;j++){
-                    if(Collidable.checkCollide(players[j], players[i].getHead())){
-                        losses[i]+=1;
+                    boolean[] collisionResult = Collidable.checkCollide(players[j], players[i].getHead());
+                    if(collisionResult[0]){
+                        if(!collisionResult[1]){
+                            wins[i^1]++;
+                        }
                         System.out.println(i + " u ded collide with "+j);
                         reset();
                         break;
