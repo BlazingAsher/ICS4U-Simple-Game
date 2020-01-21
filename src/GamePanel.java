@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private int[] wins;
     private Collidable playArea;
     private ArtificialPlayer ai;
+    private boolean multi;
 
     public final static int DISPLAY_HEIGHT = 600;
     public final static int DISPLAY_WIDTH = 700;
@@ -27,7 +28,16 @@ public class GamePanel extends JPanel implements KeyListener {
     private JLabel currScoreLabel = new JLabel("Score: 0");
     private JLabel topScoreLabel = new JLabel("Top Score: 0");
 
-    public GamePanel(TronLightCycleGame m){
+    public GamePanel(TronLightCycleGame m, String passargs){
+        System.out.println(passargs);
+        String[] passargsArr = passargs.split(",");
+
+        for(int i=0;i<passargsArr.length;i++){
+            if(i == 0){
+                this.multi = passargsArr[i].equals("multi");
+            }
+        }
+
         keys = new boolean[KeyEvent.KEY_LAST+1];
         //back = new ImageIcon("OuterSpace.jpg").getImage();
         setPreferredSize( new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -106,7 +116,6 @@ public class GamePanel extends JPanel implements KeyListener {
         }
         if(keys[KeyEvent.VK_LEFT] ){
             players[0].setDir(Direction.WEST);
-            //System.exit(0);
         }
         if(keys[KeyEvent.VK_UP] ){
             players[0].setDir(Direction.NORTH);
@@ -115,7 +124,24 @@ public class GamePanel extends JPanel implements KeyListener {
             players[0].setDir(Direction.SOUTH);
         }
 
-        ai.performAction();
+        if(multi){
+            if(keys[KeyEvent.VK_D] ){
+                players[1].setDir(Direction.EAST);
+            }
+            if(keys[KeyEvent.VK_A] ){
+                players[1].setDir(Direction.WEST);
+            }
+            if(keys[KeyEvent.VK_W] ){
+                players[1].setDir(Direction.NORTH);
+            }
+            if(keys[KeyEvent.VK_S] ){
+                players[1].setDir(Direction.SOUTH);
+            }
+        }
+        else{
+            ai.performAction();
+        }
+
 
         Point mouse = MouseInfo.getPointerInfo().getLocation();
         Point offset = getLocationOnScreen();
