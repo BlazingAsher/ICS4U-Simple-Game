@@ -1,15 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import java.awt.geom.*;
-import javax.imageio.*;
+import java.sql.SQLOutput;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 public class GamePanel extends JPanel implements KeyListener {
     private boolean []keys;
-    private Image back;
     private TronLightCycleGame mainFrame;
     private LightCycle[] players;
     private int[] wins;
@@ -20,12 +17,13 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private String[] passArgs;
 
-    public final static int DISPLAY_HEIGHT = 600;
-    public final static int DISPLAY_WIDTH = 700;
+    private final static int DISPLAY_HEIGHT = GameSettings.getScreenHeight();
+    private final static int DISPLAY_WIDTH = GameSettings.getScreenWidth();
 
     private Timer myTimer;
     private Timer boostTimer;
-    private Timer scoreTimer;
+
+    private Font fontLocal=null, fontSys=null;
    /* private int currScore;
     private int topScore;*/
 
@@ -50,7 +48,8 @@ public class GamePanel extends JPanel implements KeyListener {
 
         myTimer = new Timer(tickTime, new TickLoop());
         boostTimer = new Timer(tickTime/2, new BoostLoop());
-        scoreTimer = new Timer(100, new ScoreTickLoop());
+
+        fontSys = new Font("Comic Sans MS",Font.PLAIN,32);
 
         gameDone = false;
 
@@ -65,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private void init() {
         playArea = new Collidable();
         //playArea.addPart(new Rectangle(10, 40, DISPLAY_WIDTH-(10+10), DISPLAY_HEIGHT-(10+40)));
-        playArea.addPart(new Rectangle(0,0,DISPLAY_WIDTH, 10));
+        playArea.addPart(new Rectangle(0,75,DISPLAY_WIDTH, 10));
         playArea.addPart(new Rectangle(0,DISPLAY_HEIGHT-10,DISPLAY_WIDTH, 10));
         playArea.addPart(new Rectangle(0,0,10, DISPLAY_HEIGHT));
         playArea.addPart(new Rectangle(DISPLAY_WIDTH-10,0,10, DISPLAY_HEIGHT));
@@ -82,7 +81,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
             //players[0] = new LightCycle(300,400, Direction.WEST, playerColors[0], playerIcons[0]);*/
             for(int i=0;i<GameSettings.getNumPlayers();i++){
-                players[i] = new LightCycle((int)(100+Math.random()*300+150*i), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)],GameSettings.getPlayerColoursObj()[Integer.parseInt(this.passArgs[i+1])]/*, playerIcons[i]*/);
+                players[i] = new LightCycle((int)(150*i+Math.random()*300), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)],GameSettings.getPlayerColoursObj()[Integer.parseInt(this.passArgs[i+1])]/*, playerIcons[i]*/);
             }/*
         }
         catch (IOException e){
@@ -105,10 +104,8 @@ public class GamePanel extends JPanel implements KeyListener {
 
     }
 
-    public void reset() {
-        removeAll();
+    private void reset() {
         if(Math.max(wins[0], wins[1]) == 3){
-            gameDone = true;
             repaint();
             int dialogResult = JOptionPane.showConfirmDialog (null, "Player " + (wins[0] > wins[1] ? "1" : "2") + " wins! Play again?","Tron Lightcycles",JOptionPane.YES_NO_OPTION);
             if(dialogResult == JOptionPane.YES_OPTION){
@@ -116,14 +113,22 @@ public class GamePanel extends JPanel implements KeyListener {
                 wins = new int[GameSettings.getNumPlayers()];
                 gameDone = false;
             }
+
             else {
+                gameDone = true;
                 mainFrame.finished[0] = true;
                 myTimer.stop();
-                scoreTimer.stop();
             }
         }
 
         if(!gameDone){
+            //repaint();
+            try{
+                TimeUnit.SECONDS.sleep(100);
+            } catch(InterruptedException e){
+
+            }
+            removeAll();
             init();
         }
         //topScore = Math.max(currScore, topScore);
@@ -132,7 +137,6 @@ public class GamePanel extends JPanel implements KeyListener {
     public void start(){
         myTimer.start();
         boostTimer.start();
-        scoreTimer.start();
     }
 
     public void addNotify() {
@@ -144,6 +148,7 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void move(){
+        System.out.println("move");
         if(keys[KeyEvent.VK_RIGHT] ){
             players[0].setDir(Direction.EAST);
         }
@@ -156,8 +161,8 @@ public class GamePanel extends JPanel implements KeyListener {
         if(keys[KeyEvent.VK_DOWN] ){
             players[0].setDir(Direction.SOUTH);
         }
-        if(keys[KeyEvent.VK_SLASH] && players[0].getBoostCooldown() > 500){
-            players[0].setBoostVal(50);
+        if(keys[KeyEvent.VK_SLASH] && players[0].getBoostCooldown() > GameSettings.getBoostCooldownTicks()){
+            players[0].setBoostVal(GameSettings.getBoostTicks());
         }
 
         if(multi){
@@ -173,18 +178,21 @@ public class GamePanel extends JPanel implements KeyListener {
             if(keys[KeyEvent.VK_S] ){
                 players[1].setDir(Direction.SOUTH);
             }
+            if(keys[KeyEvent.VK_SLASH] && players[1].getBoostCooldown() > GameSettings.getBoostCooldownTicks()){
+                players[1].setBoostVal(GameSettings.getBoostTicks());
+            }
         }
         else{
             ai.performAction();
         }
 
-
         //Point mouse = MouseInfo.getPointerInfo().getLocation();
         //Point offset = getLocationOnScreen();
         //System.out.println("("+(mouse.x-offset.x)+", "+(mouse.y-offset.y)+")");
+        System.out.println("end move");
     }
 
-    protected void checkCollisions(int i) {
+    private void checkCollisions(int i) {
         if(Collidable.checkCollide(playArea, players[i].getHead())[0]){
             wins[i^1]+=1;
             System.out.println("OOB");
@@ -215,14 +223,6 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-    class ScoreTickLoop implements ActionListener {
-        public void actionPerformed(ActionEvent evt){
-            //System.out.println("Hello");
-            //currScore += 10;
-            //currScoreLabel.setText("Score: " + currScore);
-        }
-    }
-
     class BoostLoop implements ActionListener {
         public void actionPerformed(ActionEvent evt){
             for(int i=0;i<players.length;i++){
@@ -250,6 +250,7 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void paintComponent(Graphics g){
+        System.out.println("Draw");
         super.paintComponent(g);
         if(gameDone){
             return;
@@ -271,6 +272,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 }
                 g.fillRect(t.x, t.y, t.width, t.height);
             }
+
             /*
 
             AffineTransform rot = new AffineTransform();
@@ -286,6 +288,16 @@ public class GamePanel extends JPanel implements KeyListener {
 
             g2D.drawImage(player.getIcon(),rotOp,drawX,drawY);*/
             //g.drawImage(player.getIcon(), player.getHead().x, player.getHead().y, null);
+
         }
+        g.setColor(Color.blue);
+        g.fillRect(50, 50, (int) (100*((double)Math.min(players[0].getBoostCooldown(), GameSettings.getBoostCooldownTicks())/(double)GameSettings.getBoostCooldownTicks())), 50);
+
+        g.setColor(Color.black);
+        g.setFont(fontSys);
+        g.drawString(Integer.toString(wins[0]),50,30);
+
+        g.drawString(Integer.toString(wins[1]),GameSettings.getScreenWidth()-50,30);
+        System.out.println("End draw");
     }
 }

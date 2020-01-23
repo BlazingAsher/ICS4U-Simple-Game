@@ -9,7 +9,6 @@ public class TronLightCycleGame extends JFrame implements ActionListener{
     public TronLightCycleGame(boolean[] finished, String passargs) {
         super("Tron Lightcycles");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //setSize(800,650);
         this.finished = finished;
 
         myTimer = new Timer(10, this);	 // trigger every 10 ms
@@ -30,9 +29,6 @@ public class TronLightCycleGame extends JFrame implements ActionListener{
         if(!finished[0]) {
             game.move();
             game.repaint();
-        }
-        else{
-
         }
 
     }

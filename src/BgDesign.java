@@ -4,10 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class BgDesign extends JComponent implements ActionListener {
-    public final static int DISPLAY_HEIGHT = 600;
-    public final static int DISPLAY_WIDTH = 700;
+    private final static int DISPLAY_HEIGHT = GameSettings.getScreenHeight();
+    private final static int DISPLAY_WIDTH = GameSettings.getScreenWidth();
 
-    Timer myTimer;
+    private Timer myTimer;
 
     private Color[] chosenColours;
     public BgDesign(Color[] chosenColours){
@@ -42,7 +42,7 @@ class BgDesign extends JComponent implements ActionListener {
 
         g2d.setColor(this.chosenColours[1]);
 
-        Rectangle rect5 =new Rectangle(500-75, DISPLAY_HEIGHT-400, 500, 85);
+        Rectangle rect5 =new Rectangle(500-75, DISPLAY_HEIGHT-385, 500, 85);
         g2d.draw(rect5);
         g2d.fill(rect5);
 

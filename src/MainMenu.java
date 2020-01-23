@@ -11,22 +11,20 @@ public class MainMenu extends JFrame{
     boolean[] finished = new boolean[] { false };
     Timer stackTimer;
 
-    public final static int DISPLAY_HEIGHT = 600;
-    public final static int DISPLAY_WIDTH = 700;
-
     private Color[] chosenColours;
 
     public MainMenu(){
         super("Tron Lightcycles");
-        setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        setSize(GameSettings.getScreenWidth(), GameSettings.getScreenHeight());
+        setResizable(false);
         setBackground(Color.black);
 
         chosenColours = new Color[] {Color.blue, Color.red};
 
-        ImageIcon backPic = new ImageIcon("menu.jpg");
+       /* ImageIcon backPic = new ImageIcon("menu.jpg");
         JLabel back = new JLabel(backPic);
         back.setBounds(200, 0,backPic.getIconWidth(),backPic.getIconHeight());
-        layeredPane.add(back,1);
+        layeredPane.add(back,1);*/
 /*
         menuPanel = new MenuPanel(this);
         menuPanel.setSize(700, 600);
@@ -54,13 +52,13 @@ public class MainMenu extends JFrame{
 
         player1Colour = new JComboBox(GameSettings.getPlayerColours());
         player1Colour.addActionListener(new ColorUpdateListener(0));
-        player1Colour.setBounds(550, 330,100,25);
+        player1Colour.setBounds(550, 325,100,25);
         player1Colour.setSelectedIndex(0);
         layeredPane.add(player1Colour, 3);
 
         player2Colour = new JComboBox(GameSettings.getPlayerColours());
         player2Colour.addActionListener(new ColorUpdateListener(1));
-        player2Colour.setBounds(550, 365,100,25);
+        player2Colour.setBounds(550, 360,100,25);
         player2Colour.setSelectedIndex(1);
         layeredPane.add(player2Colour, 3);
 
@@ -111,4 +109,5 @@ public class MainMenu extends JFrame{
             setVisible(false);
         }
     }
+
 }
