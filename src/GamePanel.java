@@ -105,8 +105,15 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     private void reset() {
+        repaint();
+        try{
+            TimeUnit.MILLISECONDS.sleep(400);
+        } catch(InterruptedException e){
+
+        }
+
         if(Math.max(wins[0], wins[1]) == 3){
-            repaint();
+            //gameDone = true;
             int dialogResult = JOptionPane.showConfirmDialog (null, "Player " + (wins[0] > wins[1] ? "1" : "2") + " wins! Play again?","Tron Lightcycles",JOptionPane.YES_NO_OPTION);
             if(dialogResult == JOptionPane.YES_OPTION){
                 // Saving code here
@@ -122,12 +129,6 @@ public class GamePanel extends JPanel implements KeyListener {
         }
 
         if(!gameDone){
-            //repaint();
-            try{
-                TimeUnit.SECONDS.sleep(100);
-            } catch(InterruptedException e){
-
-            }
             removeAll();
             init();
         }
@@ -178,7 +179,7 @@ public class GamePanel extends JPanel implements KeyListener {
             if(keys[KeyEvent.VK_S] ){
                 players[1].setDir(Direction.SOUTH);
             }
-            if(keys[KeyEvent.VK_SLASH] && players[1].getBoostCooldown() > GameSettings.getBoostCooldownTicks()){
+            if(keys[KeyEvent.VK_F] && players[1].getBoostCooldown() > GameSettings.getBoostCooldownTicks()){
                 players[1].setBoostVal(GameSettings.getBoostTicks());
             }
         }
@@ -206,6 +207,8 @@ public class GamePanel extends JPanel implements KeyListener {
                     wins[i^1]++;
                 }
                 System.out.println(i + " u ded collide with "+j);
+                System.out.println(players[0].bodyParts);
+
                 reset();
                 break;
             }
@@ -252,9 +255,11 @@ public class GamePanel extends JPanel implements KeyListener {
     public void paintComponent(Graphics g){
         System.out.println("Draw");
         super.paintComponent(g);
+
         if(gameDone){
             return;
         }
+
         g.setColor(Color.black);
         for(Rectangle area : playArea.bodyParts){
             g.fillRect(area.x, area.y, area.width, area.height);
@@ -292,6 +297,9 @@ public class GamePanel extends JPanel implements KeyListener {
         }
         g.setColor(Color.blue);
         g.fillRect(50, 50, (int) (100*((double)Math.min(players[0].getBoostCooldown(), GameSettings.getBoostCooldownTicks())/(double)GameSettings.getBoostCooldownTicks())), 50);
+
+        int player2BoostRectWidth = (int) (100*((double)Math.min(players[1].getBoostCooldown(), GameSettings.getBoostCooldownTicks())/(double)GameSettings.getBoostCooldownTicks()));
+        g.fillRect(GameSettings.getScreenWidth()-50-player2BoostRectWidth, 50,player2BoostRectWidth , 50);
 
         g.setColor(Color.black);
         g.setFont(fontSys);
