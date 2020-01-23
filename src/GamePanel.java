@@ -18,6 +18,8 @@ public class GamePanel extends JPanel implements KeyListener {
     private boolean multi;
     private boolean gameDone;
 
+    private String[] passArgs;
+
     public final static int DISPLAY_HEIGHT = 600;
     public final static int DISPLAY_WIDTH = 700;
 
@@ -31,11 +33,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
     public GamePanel(TronLightCycleGame m, String passargs){
         System.out.println(passargs);
-        String[] passargsArr = passargs.split(",");
+        this.passArgs = passargs.split(",");
 
-        for(int i=0;i<passargsArr.length;i++){
+        for(int i=0;i<this.passArgs.length;i++){
             if(i == 0){
-                this.multi = passargsArr[i].equals("multi");
+                this.multi = this.passArgs[i].equals("multi");
             }
         }
 
@@ -68,19 +70,20 @@ public class GamePanel extends JPanel implements KeyListener {
 
         Direction[] directions = new Direction[]{Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH};
 
-        Color[] playerColors = new Color[] {Color.blue, Color.red};
-        BufferedImage[] playerIcons;
+
+        //BufferedImage[] playerIcons;
+        /*
         try{
             playerIcons = new BufferedImage[]{ImageIO.read(new File("cycles/cycle_blue.png")), ImageIO.read(new File("cycles/cycle_red.png")), ImageIO.read(new File("cycles/cycle_yellow.png")), ImageIO.read(new File("cycles/cycle_orange.png"))};
 
-            //players[0] = new LightCycle(300,400, Direction.WEST, playerColors[0], playerIcons[0]);
+            //players[0] = new LightCycle(300,400, Direction.WEST, playerColors[0], playerIcons[0]);*/
             for(int i=0;i<GameSettings.getNumPlayers();i++){
-                players[i] = new LightCycle((int)(100+Math.random()*300+150*i), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)], playerColors[i], playerIcons[i]);
-            }
+                players[i] = new LightCycle((int)(100+Math.random()*300+150*i), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)],GameSettings.getPlayerColoursObj()[Integer.parseInt(this.passArgs[i+1])]/*, playerIcons[i]*/);
+            }/*
         }
         catch (IOException e){
             System.out.println(e);
-        }
+        }*/
 
         ai = new ArtificialPlayer(players[1], players[0], playArea);
 
@@ -240,6 +243,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 }
                 g.fillRect(t.x, t.y, t.width, t.height);
             }
+            /*
 
             AffineTransform rot = new AffineTransform();
             rot.rotate(Math.toRadians(player.getDir().getDeg()),0,0);
@@ -252,7 +256,7 @@ public class GamePanel extends JPanel implements KeyListener {
             drawY = player.getHead().y + player.getIconYOffset();
             //g2D.drawImage(player.getIcon(),rotOp,drawX,drawY);
 
-            g2D.drawImage(player.getIcon(),rotOp,drawX,drawY);
+            g2D.drawImage(player.getIcon(),rotOp,drawX,drawY);*/
             //g.drawImage(player.getIcon(), player.getHead().x, player.getHead().y, null);
         }
     }

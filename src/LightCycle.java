@@ -12,16 +12,16 @@ public class LightCycle extends Collidable{
     private Rectangle head;
     private Direction dir;
     private Color color;
-    private BufferedImage icon;
+    //private BufferedImage icon;
 
-    public LightCycle(int startX, int startY, Direction dir, Color color, BufferedImage icon) {
+    public LightCycle(int startX, int startY, Direction dir, Color color/*, BufferedImage icon*/) {
         this.tailX = startX;
         this.headX = startX;
         this.tailY = startY;
         this.headY = startY;
         this.dir = dir;
         this.color = color;
-        this.icon = icon;
+        //this.icon = icon;
         this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(), GameSettings.getPlayerHeight());
     }
 
@@ -32,10 +32,10 @@ public class LightCycle extends Collidable{
     public Rectangle getHead(){
         return this.head;
     }
-
+/*
     public BufferedImage getIcon() {
         return icon;
-    }
+    }*/
 
     public Direction getDir() {
         return dir;
@@ -54,6 +54,7 @@ public class LightCycle extends Collidable{
         headX+=GameSettings.getPlayerWidth()*dir.getIncX();
         headY+=GameSettings.getPlayerHeight()*dir.getIncY();
     }
+    /*
 
     public int getIconXOffset(){
         int icoW, icoH;
@@ -98,7 +99,7 @@ public class LightCycle extends Collidable{
         }
         return extrapx;
     }
-
+*/
 //    public boolean checkCollide(LightCycle opp){
 //        Rectangle head = this.head;
 //
