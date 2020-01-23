@@ -4,11 +4,13 @@ import javax.swing.*;
 public class TronLightCycleGame extends JFrame implements ActionListener{
     Timer myTimer;
     GamePanel game;
+    public boolean[] finished;
 
-    public TronLightCycleGame(String passargs) {
+    public TronLightCycleGame(boolean[] finished, String passargs) {
         super("Tron Lightcycles");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //setSize(800,650);
+        this.finished = finished;
 
         myTimer = new Timer(10, this);	 // trigger every 10 ms
 
@@ -25,7 +27,13 @@ public class TronLightCycleGame extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent evt){
-        game.move();
-        game.repaint();
+        if(!finished[0]) {
+            game.move();
+            game.repaint();
+        }
+        else{
+
+        }
+
     }
 }

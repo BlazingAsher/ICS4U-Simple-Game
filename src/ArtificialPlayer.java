@@ -16,7 +16,7 @@ public class ArtificialPlayer {
         Rectangle currentHead = this.cycle.getHead();
         for(int i = 1;i <= GameSettings.getEnemyViewDistance(); i++){
             Rectangle finalPosition = new Rectangle(currentHead.x + (this.cycle.getDir().getIncX() * GameSettings.getPlayerWidth() * i), currentHead.y + (this.cycle.getDir().getIncY() * GameSettings.getPlayerHeight() * i), 1, 1);
-            if(Collidable.checkCollide(this.cycle, finalPosition)[0] || Collidable.checkCollide(this.opp, finalPosition)[0] || !Collidable.checkCollide(this.playArea, finalPosition)[0]){
+            if(Collidable.checkCollide(this.cycle, finalPosition)[0] || Collidable.checkCollide(this.opp, finalPosition)[0] || Collidable.checkCollide(this.playArea, finalPosition)[0]){
                 return true;
             }
         }

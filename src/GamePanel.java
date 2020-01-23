@@ -16,6 +16,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private Collidable playArea;
     private ArtificialPlayer ai;
     private boolean multi;
+    private boolean gameDone;
 
     public final static int DISPLAY_HEIGHT = 600;
     public final static int DISPLAY_WIDTH = 700;
@@ -25,8 +26,8 @@ public class GamePanel extends JPanel implements KeyListener {
    /* private int currScore;
     private int topScore;*/
 
-    private JLabel currScoreLabel = new JLabel("Score: 0");
-    private JLabel topScoreLabel = new JLabel("Top Score: 0");
+    private JLabel currScoreLabel = new JLabel("");
+    private JLabel topScoreLabel = new JLabel("");
 
     public GamePanel(TronLightCycleGame m, String passargs){
         System.out.println(passargs);
@@ -45,6 +46,8 @@ public class GamePanel extends JPanel implements KeyListener {
         myTimer = new Timer(50, new TickLoop());
         scoreTimer = new Timer(100, new ScoreTickLoop());
 
+        gameDone = false;
+
         //topScore = 0;
         wins = new int[GameSettings.getNumPlayers()];
 
@@ -55,7 +58,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private void init() {
         playArea = new Collidable();
-        playArea.addPart(new Rectangle(10, 150, DISPLAY_WIDTH-(10+10), DISPLAY_HEIGHT-(10+150)));
+        //playArea.addPart(new Rectangle(10, 40, DISPLAY_WIDTH-(10+10), DISPLAY_HEIGHT-(10+40)));
+        playArea.addPart(new Rectangle(0,0,DISPLAY_WIDTH, 10));
+        playArea.addPart(new Rectangle(0,DISPLAY_HEIGHT-10,DISPLAY_WIDTH, 10));
+        playArea.addPart(new Rectangle(0,0,10, DISPLAY_HEIGHT));
+        playArea.addPart(new Rectangle(DISPLAY_WIDTH-10,0,10, DISPLAY_HEIGHT));
 
         players = new LightCycle[GameSettings.getNumPlayers()];
 
@@ -64,11 +71,11 @@ public class GamePanel extends JPanel implements KeyListener {
         Color[] playerColors = new Color[] {Color.blue, Color.red};
         BufferedImage[] playerIcons;
         try{
-            playerIcons = new BufferedImage[]{ImageIO.read(new File("cycles/cycle_blue.png")), ImageIO.read(new File("cycles/cycle_red.png")), ImageIO.read(new File("cycles/cycle_blue.png")), ImageIO.read(new File("cycles/cycle_blue.png"))};
+            playerIcons = new BufferedImage[]{ImageIO.read(new File("cycles/cycle_blue.png")), ImageIO.read(new File("cycles/cycle_red.png")), ImageIO.read(new File("cycles/cycle_yellow.png")), ImageIO.read(new File("cycles/cycle_orange.png"))};
 
             //players[0] = new LightCycle(300,400, Direction.WEST, playerColors[0], playerIcons[0]);
             for(int i=0;i<GameSettings.getNumPlayers();i++){
-                players[i] = new LightCycle((int)(100+Math.random()*300), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)], playerColors[i], playerIcons[i]);
+                players[i] = new LightCycle((int)(100+Math.random()*300+150*i), (int)(200+Math.random()*300), directions[(int) (Math.random()*4)], playerColors[i], playerIcons[i]);
             }
         }
         catch (IOException e){
@@ -81,20 +88,38 @@ public class GamePanel extends JPanel implements KeyListener {
 
         currScoreLabel.setLocation(10,100);
         currScoreLabel.setSize(200,15);
-        currScoreLabel.setText("Wins Player 0: " + wins[0]);
+        currScoreLabel.setText("Wins Player 1: " + wins[0]);
         add(currScoreLabel);
 
         topScoreLabel.setLocation(10,120);
         topScoreLabel.setSize(200,15);
-        topScoreLabel.setText("Wins Player 1: " + wins[1]);
+        topScoreLabel.setText("Wins Player 2: " + wins[1]);
         add(topScoreLabel);
 
     }
 
     public void reset() {
         removeAll();
+        if(Math.max(wins[0], wins[1]) == 3){
+            gameDone = true;
+            repaint();
+            int dialogResult = JOptionPane.showConfirmDialog (null, "Player " + (wins[0] > wins[1] ? "1" : "2") + " wins! Play again?","Tron Lightcycles",JOptionPane.YES_NO_OPTION);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                // Saving code here
+                wins = new int[GameSettings.getNumPlayers()];
+                gameDone = false;
+            }
+            else {
+                mainFrame.finished[0] = true;
+                myTimer.stop();
+                scoreTimer.stop();
+            }
+        }
+
+        if(!gameDone){
+            init();
+        }
         //topScore = Math.max(currScore, topScore);
-        init();
     }
 
     public void start(){
@@ -143,8 +168,8 @@ public class GamePanel extends JPanel implements KeyListener {
         }
 
 
-        Point mouse = MouseInfo.getPointerInfo().getLocation();
-        Point offset = getLocationOnScreen();
+        //Point mouse = MouseInfo.getPointerInfo().getLocation();
+        //Point offset = getLocationOnScreen();
         //System.out.println("("+(mouse.x-offset.x)+", "+(mouse.y-offset.y)+")");
     }
 
@@ -153,7 +178,7 @@ public class GamePanel extends JPanel implements KeyListener {
             //System.out.println("Hello");
             for(int i=0;i<players.length;i++){
                 players[i].addPart();
-                if(!Collidable.checkCollide(playArea, players[i].getHead())[0]){
+                if(Collidable.checkCollide(playArea, players[i].getHead())[0]){
                     wins[i^1]+=1;
                     System.out.println("OOB");
                     reset();
@@ -195,8 +220,14 @@ public class GamePanel extends JPanel implements KeyListener {
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        if(gameDone){
+            return;
+        }
         g.setColor(Color.black);
-        g.fillRect(playArea.bodyParts.get(0).x, playArea.bodyParts.get(0).y, playArea.bodyParts.get(0).width, playArea.bodyParts.get(0).height);
+        for(Rectangle area : playArea.bodyParts){
+            g.fillRect(area.x, area.y, area.width, area.height);
+        }
+
 
         for(LightCycle player: players){
             g.setColor(player.getColor());
