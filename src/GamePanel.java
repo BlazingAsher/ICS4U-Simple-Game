@@ -24,6 +24,7 @@ public class GamePanel extends JPanel implements KeyListener {
     public final static int DISPLAY_WIDTH = 700;
 
     private Timer myTimer;
+    private Timer boostTimer;
     private Timer scoreTimer;
    /* private int currScore;
     private int topScore;*/
@@ -45,7 +46,10 @@ public class GamePanel extends JPanel implements KeyListener {
         //back = new ImageIcon("OuterSpace.jpg").getImage();
         setPreferredSize( new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 
-        myTimer = new Timer(50, new TickLoop());
+        int tickTime = (int) (50*(1.0/GameSettings.getSpeedMultipliers()[Integer.parseInt(passArgs[3])]));
+
+        myTimer = new Timer(tickTime, new TickLoop());
+        boostTimer = new Timer(tickTime/2, new BoostLoop());
         scoreTimer = new Timer(100, new ScoreTickLoop());
 
         gameDone = false;
@@ -127,6 +131,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     public void start(){
         myTimer.start();
+        boostTimer.start();
         scoreTimer.start();
     }
 
@@ -150,6 +155,9 @@ public class GamePanel extends JPanel implements KeyListener {
         }
         if(keys[KeyEvent.VK_DOWN] ){
             players[0].setDir(Direction.SOUTH);
+        }
+        if(keys[KeyEvent.VK_SLASH] && players[0].getBoostCooldown() > 500){
+            players[0].setBoostVal(50);
         }
 
         if(multi){
@@ -176,28 +184,32 @@ public class GamePanel extends JPanel implements KeyListener {
         //System.out.println("("+(mouse.x-offset.x)+", "+(mouse.y-offset.y)+")");
     }
 
+    protected void checkCollisions(int i) {
+        if(Collidable.checkCollide(playArea, players[i].getHead())[0]){
+            wins[i^1]+=1;
+            System.out.println("OOB");
+            reset();
+            //break;
+        }
+        for(int j=0;j<players.length;j++){
+            boolean[] collisionResult = Collidable.checkCollide(players[j], players[i].getHead());
+            if(collisionResult[0]){
+                if(!collisionResult[1]){
+                    wins[i^1]++;
+                }
+                System.out.println(i + " u ded collide with "+j);
+                reset();
+                break;
+            }
+        }
+    }
+
     class TickLoop implements ActionListener {
         public void actionPerformed(ActionEvent evt){
             //System.out.println("Hello");
             for(int i=0;i<players.length;i++){
                 players[i].addPart();
-                if(Collidable.checkCollide(playArea, players[i].getHead())[0]){
-                    wins[i^1]+=1;
-                    System.out.println("OOB");
-                    reset();
-                    break;
-                }
-                for(int j=0;j<players.length;j++){
-                    boolean[] collisionResult = Collidable.checkCollide(players[j], players[i].getHead());
-                    if(collisionResult[0]){
-                        if(!collisionResult[1]){
-                            wins[i^1]++;
-                        }
-                        System.out.println(i + " u ded collide with "+j);
-                        reset();
-                        break;
-                    }
-                }
+                checkCollisions(i);
             }
 
         }
@@ -208,6 +220,22 @@ public class GamePanel extends JPanel implements KeyListener {
             //System.out.println("Hello");
             //currScore += 10;
             //currScoreLabel.setText("Score: " + currScore);
+        }
+    }
+
+    class BoostLoop implements ActionListener {
+        public void actionPerformed(ActionEvent evt){
+            for(int i=0;i<players.length;i++){
+                if(players[i].getBoostVal() > 0){
+                    players[i].addPart();
+                    checkCollisions(i);
+                    players[i].decBoostVal();
+                    players[i].setBoostCooldown(0);
+                }
+                else {
+                    players[i].rechargeBoost();
+                }
+            }
         }
     }
 

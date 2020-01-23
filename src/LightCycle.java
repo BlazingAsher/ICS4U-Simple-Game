@@ -12,6 +12,8 @@ public class LightCycle extends Collidable{
     private Rectangle head;
     private Direction dir;
     private Color color;
+    private int boostVal;
+    private int boostCooldown;
     //private BufferedImage icon;
 
     public LightCycle(int startX, int startY, Direction dir, Color color/*, BufferedImage icon*/) {
@@ -23,6 +25,8 @@ public class LightCycle extends Collidable{
         this.color = color;
         //this.icon = icon;
         this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(), GameSettings.getPlayerHeight());
+        this.boostVal = 0;
+        this.boostCooldown = 500;
     }
 
     public Color getColor() {
@@ -53,6 +57,30 @@ public class LightCycle extends Collidable{
         bodyParts.add(this.head);
         headX+=GameSettings.getPlayerWidth()*dir.getIncX();
         headY+=GameSettings.getPlayerHeight()*dir.getIncY();
+    }
+
+    public int getBoostVal() {
+        return boostVal;
+    }
+
+    public void setBoostVal(int boostVal) {
+        this.boostVal = boostVal;
+    }
+
+    public void decBoostVal() {
+        this.boostVal-=1;
+    }
+
+    public int getBoostCooldown() {
+        return boostCooldown;
+    }
+
+    public void setBoostCooldown(int boostCooldown) {
+        this.boostCooldown = boostCooldown;
+    }
+
+    public void rechargeBoost() {
+        this.boostCooldown++;
     }
     /*
 
