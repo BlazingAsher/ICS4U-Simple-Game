@@ -131,7 +131,7 @@ public class GamePanel extends JPanel implements KeyListener {
         try{
             Thread.sleep(2000);
         } catch(InterruptedException e){
-
+            LevelLogger.log(e);
         }
 
         // Check if one of the players has won
@@ -201,6 +201,7 @@ public class GamePanel extends JPanel implements KeyListener {
         if(keys[KeyEvent.VK_DOWN] ){
             players[0].setDir(Direction.SOUTH);
         }
+        // Boost only if the cooldown is finished
         if(keys[KeyEvent.VK_SLASH] && players[0].getBoostCooldown() > GameSettings.getBoostCooldownTicks()){
             players[0].setBoostVal(GameSettings.getBoostTicks());
         }
@@ -219,6 +220,7 @@ public class GamePanel extends JPanel implements KeyListener {
             if(keys[KeyEvent.VK_S] ){
                 players[1].setDir(Direction.SOUTH);
             }
+            // Boost only if the cooldown is finished
             if(keys[KeyEvent.VK_F] && players[1].getBoostCooldown() > GameSettings.getBoostCooldownTicks()){
                 players[1].setBoostVal(GameSettings.getBoostTicks());
             }
@@ -233,13 +235,14 @@ public class GamePanel extends JPanel implements KeyListener {
      * Check whether player is colliding with something that it shouldn't
      * @param i the index of the player to check
      */
-    private void checkCollisions(int i) {
+    private boolean checkCollisions(int i) {
         // Check if player is out of bounds
         if(Collidable.checkCollide(restrictedArea, players[i].getHead())){
             wins[i^1]+=1; // Add a win to the opposing player
             LevelLogger.log("OOB");
             reset();
             //break;
+            return true;
         }
 
         // Check if player is colliding with itself or the other player
@@ -248,9 +251,10 @@ public class GamePanel extends JPanel implements KeyListener {
                 wins[i^1]++; // Add a win to the opposing player
                 LevelLogger.log(i + " u ded collide with "+j);
                 reset();
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -265,7 +269,9 @@ public class GamePanel extends JPanel implements KeyListener {
             // Add parts to player and check if it collides
             for(int i=0;i<players.length;i++){
                 players[i].addPart();
-                checkCollisions(i);
+                if(checkCollisions(i)){
+                    return;
+                }
             }
 
         }
@@ -383,7 +389,8 @@ public class GamePanel extends JPanel implements KeyListener {
         // 48 - y co-ordinate to start the text
         g.drawString("/ to BOOST!",70,48);
         // 47 - x co-ordinate offset from the right edge to start the text
+        // 100 - width of the boost bar
         // 48 - y co-ordinate to start the text
-        g.drawString("F to BOOST!",GameSettings.getScreenWidth()-47-player2BoostRectWidth,48);
+        g.drawString("F to BOOST!",GameSettings.getScreenWidth()-47-100,48);
     }
 }

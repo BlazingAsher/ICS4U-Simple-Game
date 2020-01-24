@@ -45,10 +45,10 @@ public class MainMenu extends JFrame{
             fontLocal = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(65f);
         }
         catch(IOException ex){
-            System.out.println(ex);
+            LevelLogger.log(ex, LevelLogger.WARN);
         }
         catch(FontFormatException ex){
-            System.out.println(ex);
+            LevelLogger.log(ex, LevelLogger.CRIT);
         }
 
         // Add the background graphic
@@ -92,11 +92,7 @@ public class MainMenu extends JFrame{
             midiPlayer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY); // repeat forever
             midiPlayer.start();
 
-        } catch (MidiUnavailableException e) {
-            e.printStackTrace();
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (MidiUnavailableException | InvalidMidiDataException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -206,14 +202,14 @@ public class MainMenu extends JFrame{
      * Fires when player clicks a start button
      */
     class ClickStart implements ActionListener{
-        String passargs = ""; // Configuration string for the game
+        String passargs; // Configuration string for the game
         ClickStart(String passargs) {
             this.passargs = passargs;
         }
         @Override
         public void actionPerformed(ActionEvent evt){
             finished[0] = false;
-            // Initalize the game
+            // Initialize the game
             gameFrame = new TronLightCycleGame(finished, passargs+player1Colour.getSelectedIndex()+","+player2Colour.getSelectedIndex()+","+gameSpeed.getSelectedIndex());
             // Start the game end timer
             stackTimer.start();

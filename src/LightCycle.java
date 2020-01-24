@@ -15,7 +15,6 @@ public class LightCycle extends Collidable{
     private int boostCooldown; // the boost cooldown of the LightCycle
 
     public LightCycle(int startX, int startY, Direction dir, Color color) {
-        LevelLogger.log("hello");
         this.headX = startX;
         this.headY = startY;
         this.dir = dir;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Collidable {
-    ArrayList<Rectangle> bodyParts = new ArrayList<Rectangle>(); // Stores the Rectangles of the Collidable
+    ArrayList<Rectangle> bodyParts = new ArrayList<>(); // Stores the Rectangles of the Collidable
 
     /**
      * Checks whether a Rectangle will collide with a Collidable
