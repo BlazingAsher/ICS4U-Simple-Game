@@ -46,7 +46,7 @@ public enum Direction {
     }
 
     private final int incX; // Amount to increase X when travelling in the Direction
-    private final int incY; // Amount to increase T when travelling in the Direction
+    private final int incY; // Amount to increase Y when travelling in the Direction
 
     Direction(int incX, int incY){
         this.incX = incX;

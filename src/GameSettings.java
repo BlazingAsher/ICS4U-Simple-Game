@@ -11,8 +11,8 @@ public class GameSettings {
     // Dimensions of the player
     private static int playerWidth = 8;
     private static int playerHeight = 8;
-    // Number of players
-    private static int numPlayers = 2;
+
+    private static int numPlayers = 2; // Number of players
 
     // Screen dimensions
     private static int screenHeight = 600;

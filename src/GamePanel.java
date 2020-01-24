@@ -80,11 +80,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
         // Define the restricted area
         restrictedArea = new Collidable();
-        restrictedArea.addPart(new Rectangle(0,0,DISPLAY_WIDTH, 10));
-        restrictedArea.addPart(new Rectangle(0,75,DISPLAY_WIDTH, 10));
-        restrictedArea.addPart(new Rectangle(0,DISPLAY_HEIGHT-10,DISPLAY_WIDTH, 10));
-        restrictedArea.addPart(new Rectangle(0,0,10, DISPLAY_HEIGHT));
-        restrictedArea.addPart(new Rectangle(DISPLAY_WIDTH-10,0,10, DISPLAY_HEIGHT));
+        restrictedArea.addPart(new Rectangle(0,0,DISPLAY_WIDTH, 10)); // Start at (0,0), full width, 10 px tall
+        restrictedArea.addPart(new Rectangle(0,75,DISPLAY_WIDTH, 10)); // Start at (0,75), full width, 10 px tall
+        restrictedArea.addPart(new Rectangle(0,DISPLAY_HEIGHT-10,DISPLAY_WIDTH, 10)); // Start at 10px from the bottom, full width, 10 px tall
+        restrictedArea.addPart(new Rectangle(0,0,10, DISPLAY_HEIGHT)); // Start at (0,0), 10 px wide, full height
+        restrictedArea.addPart(new Rectangle(DISPLAY_WIDTH-10,0,10, DISPLAY_HEIGHT)); // Start at 10px from the right edge, 10 px wide, full height
 
         // Initialize all the non-reusable variables
         init();
@@ -226,14 +226,16 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         }
         else{
+            // Single player, AI controls
             ai.performAction();
         }
 
     }
 
     /**
-     * Check whether player is colliding with something that it shouldn't
+     * Check whether the player is colliding with something that it shouldn't
      * @param i the index of the player to check
+     * @return whether the player is colliding with something that it shouldn't
      */
     private boolean checkCollisions(int i) {
         // Check if player is out of bounds
@@ -310,7 +312,7 @@ public class GamePanel extends JPanel implements KeyListener {
             keys[e.getKeyCode()] = true;
         }
         catch(ArrayIndexOutOfBoundsException x){
-            LevelLogger.log("Modifier key detected");
+            LevelLogger.log("Modifier key detected", LevelLogger.INFO);
         }
     }
 

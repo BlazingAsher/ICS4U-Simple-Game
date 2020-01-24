@@ -19,6 +19,7 @@ public class LightCycle extends Collidable{
         this.headY = startY;
         this.dir = dir;
         this.color = color;
+        // Create the head of the LightCycle
         this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(), GameSettings.getPlayerHeight());
         this.boostVal = 0;
         this.boostCooldown = GameSettings.getBoostCooldownTicks();

@@ -104,6 +104,10 @@ public class MainMenu extends JFrame{
         JLabel titleLabel = new JLabel("Tron     Lightcycles");
         titleLabel.setFont(fontLocal);
         titleLabel.setForeground(Color.white);
+        // 50 - x co-ordinate to start drawing the text
+        // 10 - y co-ordinate to start drawing the text
+        // 700 - the width of the label
+        // 125 - the height of the label
         titleLabel.setBounds(50, 10, 700, 125);
         layeredPane.add(titleLabel, 2);
     }
@@ -114,16 +118,28 @@ public class MainMenu extends JFrame{
     private void addLabels() {
         JLabel gameSpeedLabel = new JLabel("Game speed: ");
         gameSpeedLabel.setForeground(Color.white);
+        // 415 - x co-ordinate to start drawing the text
+        // 260 - y co-ordinate to start drawing the text
+        // 700 - the width of the label
+        // 20 - the height of the label
         gameSpeedLabel.setBounds(415, 260, 700, 20);
         layeredPane.add(gameSpeedLabel, 2);
 
         JLabel player1ColourLabel = new JLabel("Player 1 Colour: ");
         player1ColourLabel.setForeground(Color.white);
+        // 450 - x co-ordinate to start drawing the text
+        // 305 - y co-ordinate to start drawing the text
+        // 700 - the width of the label
+        // 20 - the height of the label
         player1ColourLabel.setBounds(450, 305, 700, 20);
         layeredPane.add(player1ColourLabel, 2);
 
         JLabel player2ColourLabel = new JLabel("Player 2 Colour: ");
         player2ColourLabel.setForeground(Color.white);
+        // 450 - x co-ordinate to start drawing the text
+        // 340 - y co-ordinate to start drawing the text
+        // 700 - the width of the label
+        // 20 - the height of the label
         player2ColourLabel.setBounds(450, 340, 700, 20);
         layeredPane.add(player2ColourLabel, 2);
     }
@@ -134,11 +150,19 @@ public class MainMenu extends JFrame{
     private void addStartButtons() {
         JButton startSingleBtn = new JButton("Single Player");
         startSingleBtn.addActionListener(new ClickStart("single,"));
+        // 450 - x co-ordinate to start drawing the button
+        // 150 - y co-ordinate to start drawing the button
+        // 200 - the width of the label
+        // 25 - the height of the label
         startSingleBtn.setBounds(450,150,200,25);
         layeredPane.add(startSingleBtn,2);
 
         JButton startMultiBtn = new JButton("Multi Player");
         startMultiBtn.addActionListener(new ClickStart("multi,"));
+        // 450 - x co-ordinate to start drawing the button
+        // 185 - y co-ordinate to start drawing the button
+        // 200 - the width of the label
+        // 25 - the height of the label
         startMultiBtn.setBounds(450,185,200,25);
         layeredPane.add(startMultiBtn,2);
     }
@@ -148,18 +172,30 @@ public class MainMenu extends JFrame{
      */
     private void addComboBoxes() {
         gameSpeed = new JComboBox(GameSettings.getSpeedLabels());
+        // 500 - x co-ordinate to start drawing the combobox
+        // 260 - y co-ordinate to start drawing the combobox
+        // 150 - the width of the combobox
+        // 25 - the height of the combobox
         gameSpeed.setBounds(500,260,150,25);
-        gameSpeed.setSelectedIndex(1);
+        gameSpeed.setSelectedIndex(1); // Set default selection
         layeredPane.add(gameSpeed, 2);
 
         player1Colour = new JComboBox(GameSettings.getPlayerColours());
-        player1Colour.addActionListener(new ColorUpdateListener(0));
+        player1Colour.addActionListener(new ColorUpdateListener(0)); // Register a listener for when colour is changed
+        // 550 - x co-ordinate to start drawing the combobox
+        // 305 - y co-ordinate to start drawing the combobox
+        // 100 - the width of the combobox
+        // 25 - the height of the combobox
         player1Colour.setBounds(550, 305,100,25);
-        player1Colour.setSelectedIndex(0);
+        player1Colour.setSelectedIndex(0); // Set default selection
         layeredPane.add(player1Colour, 3);
 
         player2Colour = new JComboBox(GameSettings.getPlayerColours());
-        player2Colour.addActionListener(new ColorUpdateListener(1));
+        player2Colour.addActionListener(new ColorUpdateListener(1)); // Register a listener for when colour is changed
+        // 550 - x co-ordinate to start drawing the combobox
+        // 340 - y co-ordinate to start drawing the combobox
+        // 100 - the width of the combobox
+        // 25 - the height of the combobox
         player2Colour.setBounds(550, 340,100,25);
         player2Colour.setSelectedIndex(1);
         layeredPane.add(player2Colour, 3);
