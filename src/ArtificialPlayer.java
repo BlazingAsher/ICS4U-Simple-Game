@@ -54,4 +54,9 @@ public class ArtificialPlayer {
 
     }
 
+    @Override
+    public String toString() {
+        return String.format("AI player with LightCycle: %s, opponent: %s", cycle, opp);
+    }
+
 }

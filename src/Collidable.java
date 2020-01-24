@@ -36,4 +36,9 @@ public class Collidable {
     public void addPart(Rectangle part){
         this.bodyParts.add(part);
     }
+
+    @Override
+    public String toString(){
+        return String.format("Collidable with parts: %s", bodyParts);
+    }
 }

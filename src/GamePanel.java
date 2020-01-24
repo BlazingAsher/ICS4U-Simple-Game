@@ -127,7 +127,7 @@ public class GamePanel extends JPanel implements KeyListener {
         // Stop all the timers for now
         gameDone = true;
 
-        // Cool death freeze
+        // Cool death freeze for 2s (2000ms)
         try{
             Thread.sleep(2000);
         } catch(InterruptedException e){
@@ -324,13 +324,6 @@ public class GamePanel extends JPanel implements KeyListener {
             return;
         }
 
-        // Draw the restricted areas
-        g.setColor(Color.white);
-        for(Rectangle area : restrictedArea.bodyParts){
-            g.fillRect(area.x, area.y, area.width, area.height);
-        }
-
-
         // Draw the players
         for(LightCycle player: players){
             LevelLogger.log(player.toString());
@@ -339,14 +332,17 @@ public class GamePanel extends JPanel implements KeyListener {
             Iterator it = player.bodyParts.iterator();
             while(it.hasNext()){
                 Rectangle t = (Rectangle) it.next();
-                if(t == player.getHead()){
-                    g.setColor(Color.green);
-                }
                 g.fillRect(t.x, t.y, t.width, t.height);
             }
 
-
         }
+
+        // Draw the restricted areas
+        g.setColor(Color.white);
+        for(Rectangle area : restrictedArea.bodyParts){
+            g.fillRect(area.x, area.y, area.width, area.height);
+        }
+
 
         // Draw the boost bars
         // Player 1 boost bar

@@ -115,4 +115,8 @@ public class LightCycle extends Collidable{
     public void rechargeBoost() {
         this.boostCooldown++;
     }
+
+    public String toString(){
+        return String.format("LightCycle with head at (%d, %d) heading %s with color %s. Boosting %d with cooldown %d", headX, headY, dir, color, boostVal, boostCooldown);
+    }
 }
