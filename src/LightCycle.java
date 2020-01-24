@@ -1,143 +1,118 @@
+/*
+ * File: LightCycle.java
+ * Author: David Hui
+ * Description: Represents a LightCycle. Allows parts of the game to retrieve information about it and modify its properties.
+ */
 import java.awt.*;
-import java.awt.image.*;
 
 public class LightCycle extends Collidable{
-    //public final int WIDTH = 8;
-    //public final int HEIGHT = 8;
+    private int headX; // x co-ordinate of the head
+    private int headY; // y co-ordinate of the head
+    private Rectangle head; // the head Rectangle of the LightCycle
+    private Direction dir; // the direction that the LightCycle is going
+    private Color color; // the colour of the LightCycle
+    private int boostVal; // the boost level of the LightCycle
+    private int boostCooldown; // the boost cooldown of the LightCycle
 
-    private int headX;
-    private int headY;
-    private int tailX;
-    private int tailY;
-    private Rectangle head;
-    private Direction dir;
-    private Color color;
-    private int boostVal;
-    private int boostCooldown;
-    //private BufferedImage icon;
-
-    public LightCycle(int startX, int startY, Direction dir, Color color/*, BufferedImage icon*/) {
-        this.tailX = startX;
+    public LightCycle(int startX, int startY, Direction dir, Color color) {
+        LevelLogger.log("hello");
         this.headX = startX;
-        this.tailY = startY;
         this.headY = startY;
         this.dir = dir;
         this.color = color;
-        //this.icon = icon;
         this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(), GameSettings.getPlayerHeight());
         this.boostVal = 0;
-        this.boostCooldown = 500;
+        this.boostCooldown = GameSettings.getBoostCooldownTicks();
     }
 
+    /**
+     * Returns the colour of the LightCycle
+     * @return the colour of the LightCycle
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * Returns the head Rectangle of the LightCycle
+     * @return the head Rectangle of the LightCycle
+     */
     public Rectangle getHead(){
         return this.head;
     }
-/*
-    public BufferedImage getIcon() {
-        return icon;
-    }*/
 
+    /**
+     * Returns the Direction that the LightCycle is going
+     * @return the Direction that the LightCycle is going
+     */
     public Direction getDir() {
         return dir;
     }
 
+    /**
+     * Sets the Direction of the LightCycle
+     * @param dir the new Direction of the LightCycle
+     */
     public void setDir(Direction dir){
-//        System.out.println("Current " + this.dir);
-//        System.out.println("Opposite " + this.dir.getOpposite(this.dir));
-//        System.out.println("Proposed "+ dir);
+        // Do not allow the LightCycle to turn on itself
         this.dir = this.dir.getOpposite(this.dir) != dir ? dir : this.dir;
     }
 
+    /**
+     * Add another Rectangle to the LightCycle
+     */
     public void addPart(){
         this.head = new Rectangle(headX, headY, GameSettings.getPlayerWidth(),GameSettings.getPlayerHeight());
         bodyParts.add(this.head);
+        // Update the head location
         headX+=GameSettings.getPlayerWidth()*dir.getIncX();
         headY+=GameSettings.getPlayerHeight()*dir.getIncY();
     }
 
+    /**
+     * Returns the boost level of the LightCycle
+     * @return the boost level of the LightCycle
+     */
     public int getBoostVal() {
         return boostVal;
     }
 
+    /**
+     * Sets the boost level of the LightCycle
+     * @param boostVal the new boost level of the LightCycle
+     */
     public void setBoostVal(int boostVal) {
         this.boostVal = boostVal;
     }
 
+    /**
+     * Decrement the boost level of the LightCycle
+     */
     public void decBoostVal() {
         this.boostVal-=1;
     }
 
+    /**
+     * Returns the boost cooldown of the LightCycle
+     * @return the boost cooldown of the LightCycle
+     */
     public int getBoostCooldown() {
         return boostCooldown;
     }
 
+    /**
+     * Sets the boost cooldown of the LightCycle
+     * @param boostCooldown the new boost cooldown of the LightCycle
+     */
     public void setBoostCooldown(int boostCooldown) {
+        LevelLogger.log("someone modified me!");
         this.boostCooldown = boostCooldown;
     }
 
+    /**
+     * Increment the boost cooldown of the LightCycle
+     */
     public void rechargeBoost() {
         this.boostCooldown++;
     }
-    /*
-
-    public int getIconXOffset(){
-        int icoW, icoH;
-        icoW = this.getIcon().getWidth();
-        icoH = this.getIcon().getHeight();
-
-        int extrapx;
-        switch(this.getDir()){
-            case NORTH:
-                extrapx = (icoH - GameSettings.getPlayerWidth())/-2;
-                break;
-            case EAST:
-                extrapx = -(icoW - GameSettings.getPlayerWidth() -1);
-                break;
-            case SOUTH:
-                extrapx = (icoH - GameSettings.getPlayerWidth())/2+ GameSettings.getPlayerWidth();
-                break;
-            default:
-                extrapx =  icoW - GameSettings.getPlayerWidth() -1;
-        }
-        return extrapx;
-    }
-
-    public int getIconYOffset(){
-        int icoW, icoH;
-        icoW = this.getIcon().getWidth();
-        icoH = this.getIcon().getHeight();
-
-        int extrapx;
-        switch(this.getDir()){
-            case NORTH:
-                extrapx = icoW - GameSettings.getPlayerHeight() -1;
-                break;
-            case EAST:
-                extrapx = (icoH - GameSettings.getPlayerHeight())/-2;
-                break;
-            case SOUTH:
-                extrapx = -(icoW - GameSettings.getPlayerHeight() -1);
-                break;
-            default:
-                extrapx = (icoH - GameSettings.getPlayerHeight())/2 + GameSettings.getPlayerHeight();
-        }
-        return extrapx;
-    }
-*/
-//    public boolean checkCollide(LightCycle opp){
-//        Rectangle head = this.head;
-//
-//        Iterator it = opp.bodyParts.iterator();
-//        while(it.hasNext()){
-//            Rectangle otherPart = (Rectangle) it.next();
-//            if(otherPart != head && head.intersects(otherPart)){ // make sure that we are not checking collision of the head against itself
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 }

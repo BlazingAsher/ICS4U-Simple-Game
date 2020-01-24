@@ -1,101 +1,141 @@
+/*
+ * File: GameSettings.java
+ * Author: David Hui
+ * Description: Stores all the game settings
+ */
 import java.awt.*;
-import java.util.Random;
 
 public class GameSettings {
 
-    private static int ENEMY_VIEW_DISTANCE = 5;
-    private static int PLAYER_WIDTH = 8;
-    private static int PLAYER_HEIGHT = 8;
-    private static int NUM_PLAYERS = 2;
+    private static int enemyViewDistance = 5; // Number of game ticks the AI can look ahead
+    // Dimensions of the player
+    private static int playerWidth = 8;
+    private static int playerHeight = 8;
+    // Number of players
+    private static int numPlayers = 2;
 
+    // Screen dimensions
     private static int screenHeight = 600;
     private static int screenWidth = 700;
 
-    private static String[] playerColours = new String[] {"Blue", "Red", "Yellow", "Magenta"};
-    private static Color[] playerColoursObj = new Color[] {Color.blue, Color.red, Color.yellow, Color.magenta};
+    // Available colours for the players
+    private static String[] playerColours = new String[] {"Blue", "Red", "Gray", "Magenta"};
+    private static Color[] playerColoursObj = new Color[] {Color.blue, Color.red, Color.gray, Color.magenta};
 
+    // Available game speed settings
     private static String[] speedLabels = new String[] {"Slow", "Normal", "Fast"};
     private static double[] speedMultipliers = new double[] {0.5,1.0,1.5};
 
-    private static int boostTicks = 50;
-    private static int boostCooldownTicks = 500;
+    private static int boostTicks = 50; // Number of game ticks a boost lasts for
+    private static int boostCooldownTicks = 500; // Number of game ticks to recharge boost
 
-    //private static String[] iconLocations = new String[] {"cycles/cycle_blue.png", "cycles/cycle_red.png", "cycles/cycle_yellow.png", "cycles/cycle_orange.png"};
-    public static final Random random = new Random();
+    private static int gameWinPoints = 3; // Number of points needed to win a game
 
-    public static double[] getSpeedMultipliers() {
-        return speedMultipliers;
-    }
-
-    public static int getNumPlayers() {
-        return NUM_PLAYERS;
-    }
-
-    public static void setNumPlayers(int numPlayers) {
-        NUM_PLAYERS = numPlayers;
-    }
-
-    public static Color[] getPlayerColoursObj() {
-        return playerColoursObj;
-    }
-
+    /**
+     * Returns the enemy AI view distance
+     * @return the enemy AI view distance
+     */
     public static int getEnemyViewDistance() {
-        return ENEMY_VIEW_DISTANCE;
+        return enemyViewDistance;
     }
 
-    public static void setEnemyViewDistance(int enemyViewDistance) {
-        ENEMY_VIEW_DISTANCE = enemyViewDistance;
-    }
-
+    /**
+     * Returns the width of the player
+     * @return the width of the player
+     */
     public static int getPlayerWidth() {
-        return PLAYER_WIDTH;
+        return playerWidth;
     }
 
+    /**
+     * Returns the height of the player
+     * @return the height of the player
+     */
+    public static int getPlayerHeight() {
+        return playerHeight;
+    }
+
+    /**
+     * Returns the number of players in the game
+     * @return the number of players in the game
+     */
+    public static int getNumPlayers() {
+        return numPlayers;
+    }
+
+    /**
+     * Returns the height of the screen
+     * @return the height of the screen
+     */
     public static int getScreenHeight() {
         return screenHeight;
     }
 
+    /**
+     * Returns the width of the screen
+     * @return the width of the screen
+     */
     public static int getScreenWidth() {
         return screenWidth;
     }
 
+    /**
+     * Returns the Color objects that are available to the player
+     * @see this.getPlayerColours()
+     * @return the Color objects that are available to the player
+     */
+    public static Color[] getPlayerColoursObj() {
+        return playerColoursObj;
+    }
+
+    /**
+     * Returns the names of the colours that are available to the player
+     * @see this.getPlayerColoursObj()
+     * @return the names of the colours that are available to the player
+     */
     public static String[] getPlayerColours() {
         return playerColours;
     }
 
-    public static void setPlayerColours(String[] playerColours) {
-        playerColours = playerColours;
-    }
-
-    public static void setPlayerWidth(int playerWidth) {
-        PLAYER_WIDTH = playerWidth;
-    }
-
-    public static int getPlayerHeight() {
-        return PLAYER_HEIGHT;
-    }
-
-    public static void setPlayerHeight(int playerHeight) {
-        PLAYER_HEIGHT = playerHeight;
-    }
-
+    /**
+     * Returns the speed names that are available to the player
+     * @see this.getSpeedMultipliers()
+     * @return the speed names that are available to the player
+     */
     public static String[] getSpeedLabels() {
         return speedLabels;
     }
 
+    /**
+     * Returns the available game speed multipliers
+     * @see this.getSpeedLabels()
+     * @return the available game speed multipliers
+     */
+    public static double[] getSpeedMultipliers() {
+        return speedMultipliers;
+    }
+
+    /**
+     * Returns the number of game ticks a boost lasts for
+     * @return the number of game ticks a boost lasts for
+     */
     public static int getBoostTicks() {
         return boostTicks;
     }
 
-    public static void setBoostTicks(int boostTicks) {
-        GameSettings.boostTicks = boostTicks;
-    }
-
+    /**
+     * Returns the number of game ticks to recharge boost
+     * @return the number of game ticks to recharge boost
+     */
     public static int getBoostCooldownTicks() {
         return boostCooldownTicks;
     }
 
-    public static void setBoostCooldownTicks(int boostCooldownTicks) {
-        GameSettings.boostCooldownTicks = boostCooldownTicks;
+    /**
+     * Returns the number of points needed to win a game
+     * @return the number of points needed to win a game
+     */
+    public static int getGameWinPoints() {
+        return gameWinPoints;
     }
 }

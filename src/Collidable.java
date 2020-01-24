@@ -1,27 +1,38 @@
+/*
+ * File: Collidable.java
+ * Author: David Hui
+ * Description: Container for objects made of multiple rects. Allows for checking whether a Rectangle collides with a Collidable.
+ */
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Collidable {
-    ArrayList<Rectangle> bodyParts = new ArrayList<Rectangle>();
+    ArrayList<Rectangle> bodyParts = new ArrayList<Rectangle>(); // Stores the Rectangles of the Collidable
 
-    public static boolean[] checkCollide(Collidable opp, Rectangle checkRect){
-        Rectangle head = checkRect;
+    /**
+     * Checks whether a Rectangle will collide with a Collidable
+     * @param opp the Collidable
+     * @param checkRect the Rectangle
+     * @return whether the Rectangle will collide with the Collidable
+     */
+    public static boolean checkCollide(Collidable opp, Rectangle checkRect){
+        Iterator it = opp.bodyParts.iterator(); // Iterator for all the parts of the Collidable
 
-        Iterator it = opp.bodyParts.iterator();
+        // Iterate through all the parts and see if one of the Rectangles collides with the checkRect
         while(it.hasNext()){
-            //System.out.println("test");
             Rectangle otherPart = (Rectangle) it.next();
-            if(otherPart != head && head.intersects(otherPart)){ // make sure that we are not checking collision of the head against itself
-                if(otherPart == opp.bodyParts.get(opp.bodyParts.size() - 1)){
-                    return new boolean[]{true, true};
-                }
-                return new boolean[] {true, false};
+            if(otherPart != checkRect && checkRect.intersects(otherPart)){ // make sure that we are not checking collision of the head against itself (when we are checking if the head of a player is colliding with itself
+                return true;
             }
         }
-        return new boolean[]{false, false};
+        return false;
     }
 
+    /**
+     * Add a part to the Collidable
+     * @param part the Rectangle to add to the Collidable
+     */
     public void addPart(Rectangle part){
         this.bodyParts.add(part);
     }
