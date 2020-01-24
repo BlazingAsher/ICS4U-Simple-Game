@@ -79,7 +79,7 @@ public class MainMenu extends JFrame{
     }
 
     /**
-     * Starts playing MIDI music
+     * Starts playing MIDI music. Taken from Mr. McKenzie
      * @param midFilename the filename of the MIDI file
      */
     public static void startMidi(String midFilename) {
